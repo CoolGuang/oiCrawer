@@ -17,23 +17,27 @@ class CrawlerBase(object):
     def get_request_body(self, url=None, headers=None, username="defalut"):
         print("get url: {}".format(url))
         response = None
+        result = None
         try:
-            response = requests.get(url=url, headers=headers)
+            response = requests.get(url=url, headers=headers, allow_redirects=False)
+            # TODO log
+            print (response.status_code)
             if response.status_code == 200:
-                return response.content.decode("utf-8")
+                result = response.content.decode("utf-8")
             elif response.status_code == 404:
-                return USER_NOT_EXIST
+                result = USER_NOT_EXIST
+            # codeforces 用户不存在会重定向
+            elif response.status_code == 302:
+                result = USER_NOT_EXIST
             elif response.status_code == 408:
-                return URL_TIMEOUT
+                result = URL_TIMEOUT
             else:
-                return COMMON_ERROR
+                result = COMMON_ERROR
         except Exception as e:
             # TODO 文本获取失败
             print ("(param:{}), request error!".format(username))
         finally:
-            if response is None:
-                return COMMON_ERROR
-            return response.content.decode("utf-8")
+            return result
 
     @staticmethod
     def check_result(result):

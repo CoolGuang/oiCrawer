@@ -30,10 +30,6 @@ class CodeforcesCrawler(CrawlerBase):
         time.sleep(1)
         contest_body_text = self.get_request_body(self, url=url_contest, headers=headers)
 
-        # TODO need cancel, for test
-        print (profile_body_text)
-        print (contest_body_text)
-
         return profile_body_text, contest_body_text
 
     def deal_with_profile_body_contest(self, body=None):
@@ -46,7 +42,10 @@ class CodeforcesCrawler(CrawlerBase):
 
     def get_profile_info_model(self):
         profile_body_text, contest_body_text = self.get_profile_info_body()
-        # TODO 根据类方法判断状态并返回
+        if profile_body_text in STATE_ERROR_LIST:
+            return profile_body_text
+        if contest_body_text in STATE_ERROR_LIST:
+            return contest_body_text
         max_rating, current_rating, solve_problems = \
             self.deal_with_profile_body_info(body=profile_body_text)
         last_contest_rank, latest_contests_ratings = \
@@ -73,4 +72,7 @@ if __name__ == '__main__':
     crawler = CodeforcesCrawler("CCoolGuang")
     model = crawler.get_profile_info_model()
 
-    print (model)
+    if model in STATE_ERROR_LIST:
+        print(model)
+    else:
+        print(model)
