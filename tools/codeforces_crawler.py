@@ -6,6 +6,10 @@ import register_config
 import models.codeforces_model as CFM
 from config.global_variable import *
 
+from bs4 import BeautifulSoup
+
+from diy_logger import Logger
+
 class CodeforcesCrawler(CrawlerBase):
 
     def __init__(self, username=None):
@@ -15,8 +19,7 @@ class CodeforcesCrawler(CrawlerBase):
     def get_profile_info_body(self):
         config = register_config.ConfigBase.NAME_CONFIG_DICT["get_profile_info_body"]
         if not config:
-            # TODO LOG()
-            print("配置文件错误！")
+            Logger.error("codeforces config error!")
             return None
         headers = config["headers"]
         url = ""
@@ -26,14 +29,15 @@ class CodeforcesCrawler(CrawlerBase):
 
         url_profile = url[0] + "{}/".format(self.username)
         url_contest = url[1] + "{}/".format(self.username)
-        profile_body_text = self.get_request_body(self, url=url_profile, headers=headers)
+        profile_body_text = self.get_request_body(self, url=url_profile, headers=headers, username=self.username)
         time.sleep(1)
-        contest_body_text = self.get_request_body(self, url=url_contest, headers=headers)
+        contest_body_text = self.get_request_body(self, url=url_contest, headers=headers, username=self.username)
 
         return profile_body_text, contest_body_text
 
     def deal_with_profile_body_contest(self, body=None):
-
+        #soup = BeautifulSoup(markup=body, features="lxml")
+        #print(soup.prettify())
         return None, None
 
     def deal_with_profile_body_info(self, body=None):

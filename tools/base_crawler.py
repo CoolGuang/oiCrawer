@@ -2,7 +2,7 @@
 import os
 import requests
 from config.global_variable import *
-
+from diy_logger import Logger
 
 class CrawlerBase(object):
     """
@@ -19,9 +19,8 @@ class CrawlerBase(object):
         response = None
         result = None
         try:
-            response = requests.get(url=url, headers=headers, allow_redirects=False)
-            # TODO log
-            print (response.status_code)
+            response = requests.get(url=url, headers=headers, allow_redirects=False, timeout=5)
+            Logger.common("{}: request status :{}".format(username, response.status_code))
             if response.status_code == 200:
                 result = response.content.decode("utf-8")
             elif response.status_code == 404:
@@ -34,8 +33,8 @@ class CrawlerBase(object):
             else:
                 result = COMMON_ERROR
         except Exception as e:
-            # TODO 文本获取失败
-            print ("(param:{}), request error!".format(username))
+            Logger.error("{} request error!".format(username))
+
         finally:
             return result
 
