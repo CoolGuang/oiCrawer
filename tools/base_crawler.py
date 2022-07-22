@@ -46,7 +46,7 @@ class CrawlerBase(object):
                          "request InvalidURL".format(username))
         except Exception:
             Logger.error("base_crawler line 48 : user->{} unknow error")
-        finally:：
+        finally:
             return result
 
     @staticmethod
