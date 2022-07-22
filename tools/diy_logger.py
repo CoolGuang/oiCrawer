@@ -17,7 +17,7 @@ class Logger:
 
     @classmethod
     def error(cls, message):
-        print("{}ERROR:{}{}".format(cls.GREEN, message, cls.END))
+        print("{}ERROR:{}{}".format(cls.RED, message, cls.END))
         cls.save_to_local(message)
 
     @classmethod

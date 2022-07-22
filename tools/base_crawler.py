@@ -19,7 +19,7 @@ class CrawlerBase(object):
         response = None
         result = None
         try:
-            response = requests.get(url=url, headers=headers, allow_redirects=False, timeout=5)
+            response = requests.get(url=url, headers=headers, allow_redirects=False, timeout=10)
             Logger.common("{}: request status :{}".format(username, response.status_code))
             if response.status_code == 200:
                 result = response.content.decode("utf-8")
@@ -32,10 +32,21 @@ class CrawlerBase(object):
                 result = URL_TIMEOUT
             else:
                 result = COMMON_ERROR
-        except Exception as e:
-            Logger.error("{} request error!".format(username))
-
-        finally:
+        except requests.exceptions.ConnectionError:
+            Logger.error("base_crawler line 36 : user->{} "
+                         "ConnectionError".format(username))
+        except requests.exceptions.URLRequired:
+            Logger.error("base_crawler line 39 : user->{} "
+                         "URLRequired".format(username))
+        except requests.exceptions.Timeout:
+            Logger.error("base_crawler line 42 : user->{} "
+                         "request TimeoutError".format(username))
+        except requests.exceptions.InvalidURL:
+            Logger.error("base_crawler line 45 : user->{} "\
+                         "request InvalidURL".format(username))
+        except Exception:
+            Logger.error("base_crawler line 48 : user->{} unknow error")
+        finally:：
             return result
 
     @staticmethod

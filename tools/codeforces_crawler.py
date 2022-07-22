@@ -19,7 +19,7 @@ class CodeforcesCrawler(CrawlerBase):
     def get_profile_info_body(self):
         config = register_config.ConfigBase.NAME_CONFIG_DICT["get_profile_info_body"]
         if not config:
-            Logger.error("codeforces config error!")
+            Logger.error("codeforces_crawler.py line 22 : codeforces config error!")
             return None
         headers = config["headers"]
         url = ""
@@ -36,12 +36,13 @@ class CodeforcesCrawler(CrawlerBase):
         return profile_body_text, contest_body_text
 
     def deal_with_profile_body_contest(self, body=None):
-        #soup = BeautifulSoup(markup=body, features="lxml")
-        #print(soup.prettify())
+        soup = BeautifulSoup(markup=body, features="lxml")
+        print(soup.prettify())
         return None, None
 
     def deal_with_profile_body_info(self, body=None):
-
+        # soup = BeautifulSoup(markup=body, features="lxml")
+        # print(soup.prettify())
         return None, None, None
 
     def get_profile_info_model(self):
@@ -50,6 +51,9 @@ class CodeforcesCrawler(CrawlerBase):
             return profile_body_text
         if contest_body_text in STATE_ERROR_LIST:
             return contest_body_text
+        if profile_body_text is None or contest_body_text is None:
+            Logger.error("codeforces_crawler line 54 : variable is None")
+            return COMMON_ERROR
         max_rating, current_rating, solve_problems = \
             self.deal_with_profile_body_info(body=profile_body_text)
         last_contest_rank, latest_contests_ratings = \
