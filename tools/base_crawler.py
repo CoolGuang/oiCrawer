@@ -1,6 +1,7 @@
 
 import os
 import requests
+
 from config.global_variable import *
 from diy_logger import Logger
 
@@ -15,7 +16,7 @@ class CrawlerBase(object):
     # 获取请求体， 父类获取方法
     @staticmethod
     def get_request_body(self, url=None, headers=None, username="defalut"):
-        print("get url: {}".format(url))
+        Logger.common("get url: {}".format(url))
         response = None
         result = None
         try:

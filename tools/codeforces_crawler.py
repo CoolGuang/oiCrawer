@@ -1,3 +1,4 @@
+
 import time
 
 from base_crawler import CrawlerBase
@@ -16,6 +17,7 @@ class CodeforcesCrawler(CrawlerBase):
         self.username = username
 
     @register_config.ConfigBase.register(config_name="codeforces")
+
     def get_profile_info_body(self):
         config = register_config.ConfigBase.NAME_CONFIG_DICT["get_profile_info_body"]
         if not config:

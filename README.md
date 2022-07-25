@@ -1,0 +1,2 @@
+# AcmerRatingTools
+基于python爬取指定用户名的各种rating与比赛信息
