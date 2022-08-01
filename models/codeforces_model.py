@@ -88,7 +88,7 @@ class CodeforcesUserInfoModel(UserProfileBase):
         return result
 
 
-class CodeforcesContestModel(UserProfileBase):
+class CodeforcesContestModel(ContestBase):
 
     def __init__(self, contest_name_list=None, contest_start_time_list=None, contest_length_list=None, \
                  contest_url_list=None):
@@ -101,15 +101,6 @@ class CodeforcesContestModel(UserProfileBase):
                                                                   contest_length_list, contest_url_list)]
         except TypeError:
             self.contests_info = []
-
-    def trans_to_date(self, date):
-        """
-            str date 转换成 datetime 格式
-        """
-        if isinstance(date, datetime.datetime):
-            return date
-        res_date = datetime.datetime.strptime(self.date, "%b/%d/%Y %H:%M")
-        return res_date
 
     @property
     def today_contests(self):
