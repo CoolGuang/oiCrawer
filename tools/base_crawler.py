@@ -21,6 +21,7 @@ class CrawlerBase(object):
         result = None
         try:
             response = requests.get(url=url, headers=headers, allow_redirects=False, timeout=10)
+            response.raise_for_status()
             Logger.common("{}: request status :{}".format(username, response.status_code))
             if response.status_code == 200:
                 result = response.content.decode("utf-8")

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/CodingAcmerTool.iml" filepath="$PROJECT_DIR$/.idea/CodingAcmerTool.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/AcmerRatingTools.iml" filepath="$PROJECT_DIR$/.idea/AcmerRatingTools.iml" />
     </modules>
   </component>
 </project>

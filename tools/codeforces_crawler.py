@@ -11,6 +11,7 @@ from bs4 import BeautifulSoup
 
 from diy_logger import Logger
 
+
 class CodeforcesCrawler(CrawlerBase):
 
     def __init__(self, username=None):
@@ -98,14 +99,5 @@ class CodeforcesCrawler(CrawlerBase):
 if __name__ == '__main__':
     # 测试
     crawler = CodeforcesCrawler("CCoolGuang")
-    model = crawler.get_profile_info_model()
-    Logger.waring(model.username)
-    Logger.waring(model.max_rating)
-    Logger.waring(model.last_contests_name)
 
-    for item in model.late_contests_change:
-        Logger.waring(item)
-
-    Logger.waring(model.latest_contests_ratings)
-    Logger.waring(model.latest_avg_contests_rating)
-    Logger.waring(model.latest_contest_time)
+    print(CFM.CodeforcesContestModel().today_contests)

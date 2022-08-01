@@ -1,5 +1,5 @@
-
 from models.model_base import UserProfileBase, ContestBase
+import datetime
 
 
 class CodeforcesUserInfoModel(UserProfileBase):
@@ -47,7 +47,7 @@ class CodeforcesUserInfoModel(UserProfileBase):
     @property
     def latest_contest_time(self):
         """
-            最近一场比赛的change
+            最近一场比赛的时间
             type : str
         """
         if len(self.last_contest_time) == 0:
@@ -86,3 +86,53 @@ class CodeforcesUserInfoModel(UserProfileBase):
             return None
         result = (item[0] for item in self.latest_contests_ratings)
         return result
+
+
+class CodeforcesContestModel(UserProfileBase):
+
+    def __init__(self, contest_name_list=None, contest_start_time_list=None, contest_length_list=None, \
+                 contest_url_list=None):
+        self.contest_name_list = contest_name_list
+        self.contest_start_time_list = contest_start_time_list
+        self.contest_length_list = contest_length_list
+        self.contest_url_list = contest_url_list
+        try:
+            self.contests_info = [(x, y, z, u) for x, y, z, u in (contest_name_list, contest_start_time_list,
+                                                                  contest_length_list, contest_url_list)]
+        except TypeError:
+            self.contests_info = []
+
+    def trans_to_date(self, date):
+        """
+            str date 转换成 datetime 格式
+        """
+        if isinstance(date, datetime.datetime):
+            return date
+        res_date = datetime.datetime.strptime(self.date, "%b/%d/%Y %H:%M")
+        return res_date
+
+    @property
+    def today_contests(self):
+        """
+            获取今天的比赛信息
+            :return -> tuple list [(name, time. length)]
+        """
+        _now = self.trans_to_date(datetime.datetime.now())
+        contests = []
+        try:
+            for date_item in self.contest_start_time_list:
+                trans_date_item = self.trans_to_date(date_item[1])
+                if trans_date_item.day == _now.day and trans_date_item.month == _now.month \
+                        and trans_date_item.year == _now.year:
+                    contests.append(date_item)
+        except TypeError:
+            pass
+        return contests
+
+    @property
+    def recent_contest(self):
+        """
+            获取最近的比赛信息（对标官网 recent contests）
+        """
+        pass
+        return
