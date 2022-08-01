@@ -1,3 +1,4 @@
+import datetime
 
 
 class UserProfileBase(object):
@@ -15,7 +16,8 @@ class ContestBase(object):
         """
             str date 转换成 datetime 格式
         """
+        print(date)
         if isinstance(date, datetime.datetime):
             return date
-        res_date = datetime.datetime.strptime(self.date, "%b/%d/%Y %H:%M")
+        res_date = datetime.datetime.strptime(date, "%b/%d/%Y %H:%M")
         return res_date

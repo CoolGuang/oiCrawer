@@ -97,7 +97,7 @@ class CodeforcesContestModel(ContestBase):
         self.contest_length_list = contest_length_list
         self.contest_url_list = contest_url_list
         try:
-            self.contests_info = [(x, y, z, u) for x, y, z, u in (contest_name_list, contest_start_time_list,
+            self.contests_info = [(x, y, z, u) for x, y, z, u in zip(contest_name_list, contest_start_time_list,
                                                                   contest_length_list, contest_url_list)]
         except TypeError:
             self.contests_info = []
@@ -111,7 +111,7 @@ class CodeforcesContestModel(ContestBase):
         _now = self.trans_to_date(datetime.datetime.now())
         contests = []
         try:
-            for date_item in self.contest_start_time_list:
+            for date_item in self.contests_info:
                 trans_date_item = self.trans_to_date(date_item[1])
                 if trans_date_item.day == _now.day and trans_date_item.month == _now.month \
                         and trans_date_item.year == _now.year:
@@ -127,3 +127,6 @@ class CodeforcesContestModel(ContestBase):
         """
         pass
         return
+
+    def __repr__(self):
+        return self.contests_info.__repr__()

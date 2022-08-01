@@ -1,4 +1,3 @@
-
 import time
 
 from base_crawler import CrawlerBase
@@ -12,13 +11,12 @@ from bs4 import BeautifulSoup
 from diy_logger import Logger
 
 
-class CodeforcesCrawler(CrawlerBase):
+class CodeforcesProfileCrawler(CrawlerBase):
 
     def __init__(self, username=None):
         self.username = username
 
     @register_config.ConfigBase.register(config_name="codeforces")
-
     def get_profile_info_body(self):
         config = register_config.ConfigBase.NAME_CONFIG_DICT["get_profile_info_body"]
         if not config:
@@ -59,17 +57,17 @@ class CodeforcesCrawler(CrawlerBase):
         current_rating = soup.select_one("div.info>ul>li>span").string
         max_rating = soup.select("div.info>ul>li>span.smaller>span")[1].string
         problems_set = soup.select("div._UserActivityFrame_footer>div>div."
-                                           "_UserActivityFrame_counter>div._UserActivityFrame_counterValue")
+                                   "_UserActivityFrame_counter>div._UserActivityFrame_counterValue")
         last_month_solutions = problems_set[2].string
         solve_problems = problems_set[0].string
-
+        Logger.waring(solve_problems)
         return max_rating, current_rating, last_month_solutions, solve_problems
 
     def get_profile_info_model(self):
         profile_body_text, contest_body_text = self.get_profile_info_body()
-        if profile_body_text in STATE_ERROR_LIST:
+        if not self.check_result(profile_body_text):
             return profile_body_text
-        if contest_body_text in STATE_ERROR_LIST:
+        if not self.check_result(contest_body_text):
             return contest_body_text
         if profile_body_text is None or contest_body_text is None:
             Logger.error("codeforces_crawler line 54 : variable is None")
@@ -90,14 +88,67 @@ class CodeforcesCrawler(CrawlerBase):
         )
         return result_model
 
+
+class CodeforcesContestCrawler(CrawlerBase):
+
+    def __init__(self, username=None):
+        self.username = username
+
     @register_config.ConfigBase.register(config_name="codeforces")
     def get_contest_info_body(self):
-        config = register_config.ConfigBase.NAME_CONFIG_DICT["get_profile_info"]
-        pass
+        config = register_config.ConfigBase.NAME_CONFIG_DICT["get_contest_info_body"]
+        if not config:
+            Logger.error("codeforces_crawler.py line 97 : codeforces config error!")
+            return None
+        headers = config["headers"]
+        url = ""
+        for item in config["type_list"]:
+            if item["type_name"] == "latest_contest":
+                url = item["urls"]
+        contest_body_text = self.get_request_body(self, url=url[0], headers=headers)
+        return contest_body_text
 
+    def deal_with_contest_body(self, contest_body):
+        contest_name_list = []
+        contest_start_time_list = []
+        contest_length_list = []
+        contest_url_list = []
+        soup = BeautifulSoup(markup=contest_body, features="lxml")
+        contest_list = soup.select_one("div.datatable>div>table")
+        contest_list = contest_list.select("tr")
+        for contest in contest_list[1:]:
+
+            contest_url_list.append("https://codeforces.com/contest/{}"\
+                                    .format(contest['data-contestid'].strip('\n\r ')))
+            items = contest.select("td")
+            contest_name_list.append(items[0].string.strip('\n\r '))
+            contest_start_time_list.append(items[2].select_one("span").string.strip('\n\r '))
+            contest_length_list.append(items[3].string.strip('\n\r '))
+
+        return contest_name_list, contest_start_time_list\
+            , contest_length_list, contest_url_list
+
+    def get_contest_info_model(self):
+        contest_body = self.get_contest_info_body()
+        if not self.check_result(contest_body):
+            return contest_body
+        if contest_body is None:
+            Logger.error("codeforces_crawler line 131 : variable is None")
+            return COMMON_ERROR
+        contest_name_list, contest_start_time_list, contest_length_list, contest_url_list = \
+            self.deal_with_contest_body(contest_body=contest_body)
+        res_model = CFM.CodeforcesContestModel(
+            contest_name_list=contest_name_list,
+            contest_start_time_list=contest_start_time_list,
+            contest_length_list=contest_length_list,
+            contest_url_list=contest_url_list
+        )
+        return res_model
 
 if __name__ == '__main__':
     # 测试
-    crawler = CodeforcesCrawler("CCoolGuang")
-
-    print(CFM.CodeforcesContestModel().today_contests)
+    crawler = CodeforcesContestCrawler()
+    model = crawler.get_contest_info_model()
+    # crawler_ = CodeforcesProfileCrawler()
+    # print(crawler_.get_profile_info_model())
+    print(model.today_contests)

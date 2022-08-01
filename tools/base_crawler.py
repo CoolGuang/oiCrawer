@@ -35,28 +35,30 @@ class CrawlerBase(object):
             else:
                 result = COMMON_ERROR
         except requests.exceptions.ConnectionError:
-            Logger.error("base_crawler line 36 : user->{} "
+            Logger.error("base_crawler line 38 : user->{} "
                          "ConnectionError".format(username))
         except requests.exceptions.URLRequired:
-            Logger.error("base_crawler line 39 : user->{} "
+            Logger.error("base_crawler line 41 : user->{} "
                          "URLRequired".format(username))
         except requests.exceptions.Timeout:
-            Logger.error("base_crawler line 42 : user->{} "
+            Logger.error("base_crawler line 44 : user->{} "
                          "request TimeoutError".format(username))
         except requests.exceptions.InvalidURL:
-            Logger.error("base_crawler line 45 : user->{} "\
+            Logger.error("base_crawler line 47 : user->{} "\
                          "request InvalidURL".format(username))
         except Exception:
-            Logger.error("base_crawler line 48 : user->{} unknow error")
+            Logger.error("base_crawler line 50 : user->{} unknow error")
         finally:
             return result
 
-    @staticmethod
-    def check_result(result):
-        if result == USER_NOT_EXIST:
-            return False
-        if result == URL_TIMEOUT:
-            return False
-        if result == COMMON_ERROR:
-            return False
+    def check_result(*result):
+        """
+            返回传递参数是否存在于error状态
+            return bool -> True:状态ok
+        """
+        for item in result:
+            if item in STATE_ERROR_LIST:
+                return False
         return True
+
+
