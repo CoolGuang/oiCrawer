@@ -3,7 +3,8 @@ import os
 import requests
 
 from config.global_variable import *
-from diy_logger import Logger
+from tools.diy_logger import Logger
+
 
 class CrawlerBase(object):
     """
@@ -32,6 +33,8 @@ class CrawlerBase(object):
                 result = USER_NOT_EXIST
             elif response.status_code == 408:
                 result = URL_TIMEOUT
+            elif response.status_code == 404:
+                result = USER_NOT_EXIST
             else:
                 result = COMMON_ERROR
         except requests.exceptions.ConnectionError:

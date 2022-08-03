@@ -1,2 +1,5 @@
-# AcmerRatingTools
-基于python爬取指定用户名的各种rating与比赛信息
+# AcmerHelpBot
+
+1. [x] cf比赛信息爬取
+2. [x] cf个人信息查询
+3. [ ] 接入机器人

@@ -1,17 +1,18 @@
 import time
 
-from base_crawler import CrawlerBase
-import register_config
+from tools import base_crawler
+
+from tools import register_config
 
 import models.codeforces_model as CFM
 from config.global_variable import *
 
 from bs4 import BeautifulSoup
 
-from diy_logger import Logger
+from tools.diy_logger import Logger
 
 
-class CodeforcesProfileCrawler(CrawlerBase):
+class CodeforcesProfileCrawler(base_crawler.CrawlerBase):
 
     def __init__(self, username=None):
         self.username = username
@@ -63,7 +64,7 @@ class CodeforcesProfileCrawler(CrawlerBase):
         Logger.waring(solve_problems)
         return max_rating, current_rating, last_month_solutions, solve_problems
 
-    def get_profile_info_model(self):
+    async def get_profile_info_model(self):
         profile_body_text, contest_body_text = self.get_profile_info_body()
         if not self.check_result(profile_body_text):
             return profile_body_text
@@ -89,7 +90,7 @@ class CodeforcesProfileCrawler(CrawlerBase):
         return result_model
 
 
-class CodeforcesContestCrawler(CrawlerBase):
+class CodeforcesContestCrawler(base_crawler.CrawlerBase):
 
     def __init__(self, username=None):
         self.username = username
@@ -128,7 +129,7 @@ class CodeforcesContestCrawler(CrawlerBase):
         return contest_name_list, contest_start_time_list\
             , contest_length_list, contest_url_list
 
-    def get_contest_info_model(self):
+    async def get_contest_info_model(self):
         contest_body = self.get_contest_info_body()
         if not self.check_result(contest_body):
             return contest_body
@@ -145,10 +146,12 @@ class CodeforcesContestCrawler(CrawlerBase):
         )
         return res_model
 
+
 if __name__ == '__main__':
     # 测试
     crawler = CodeforcesContestCrawler()
     model = crawler.get_contest_info_model()
-    # crawler_ = CodeforcesProfileCrawler()
+    print(model.today_contests_string())
+    print(model.recent_contests_string())
+    # crawler_ = CodeforcesProfileCrawler(username="asda123")
     # print(crawler_.get_profile_info_model())
-    print(model.today_contests)
