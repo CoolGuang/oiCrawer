@@ -10,8 +10,8 @@ from tools import codeforces_crawler
 @on_command('cfs', only_to_me=False, aliases=('cf_search', 'cfp', 'cfsearch', 'cf查询'))
 async def search_profile(session: CommandSession):
     # 取得消息的内容，并且去掉首尾的空白符
-    command = session.current_arg_text.strip()
-    if not command:
+    username = session.current_arg_text.strip()
+    if not username:
         username = (await session.aget(prompt='输入你要查询的codeforces的用户名')).strip()
         # 如果用户只发送空白符，则继续询问
         while not username:
