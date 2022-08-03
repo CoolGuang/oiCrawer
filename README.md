@@ -1,2 +1,3 @@
-# AcmerRatingTools
-基于python爬取指定用户名的各种rating与比赛信息
+# AcmerHelpBot
+
+一个可以帮助acmer， 查询任何比赛信息的 qq 机器人
