@@ -179,7 +179,7 @@ class CodeforcesContestModel(ContestBase):
             result += "=========================\n"
             result += "比赛名称:{}\n" \
                       "开始时间:{}\n" \
-                      "比赛时常:{}\n" \
+                      "比赛时长:{}\n" \
                       "比赛链接:{}\n".format(item[0], item[1],
                                          item[2], item[3])
         return result

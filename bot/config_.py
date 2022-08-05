@@ -1,4 +1,4 @@
-from nonebot.default_config import *
+from nonebot. import *
 from nonebot import on_command
 
 

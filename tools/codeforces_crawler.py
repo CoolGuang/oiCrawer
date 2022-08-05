@@ -24,7 +24,7 @@ class CodeforcesProfileCrawler(base_crawler.CrawlerBase):
             Logger.error("codeforces_crawler.py line 22 : codeforces config error!")
             return None
         headers = config["headers"]
-        url = ""
+        url = "123"
         for item in config["type_list"]:
             if item["type_name"] == "user_profile":
                 url = item["urls"]

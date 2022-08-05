@@ -1,5 +1,4 @@
 from nonebot import on_command, CommandSession
-
 from tools import codeforces_crawler
 
 """
