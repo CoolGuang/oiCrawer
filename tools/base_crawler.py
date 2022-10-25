@@ -7,16 +7,15 @@ from tools.diy_logger import Logger
 
 
 class CrawlerBase(object):
-    """
-        爬虫类， 参数接受url爬取对应信息
-    """
     # 初始化
     def __init__(self):
         pass
-
     # 获取请求体， 父类获取方法
+
     @staticmethod
-    def get_request_body(self, url=None, headers=None, username="defalut"):
+    def get_request_body(url=None, headers=None, username=None):
+        if url is not None:
+            url = url + username
         Logger.common("get url: {}".format(url))
         response = None
         result = None
@@ -38,19 +37,15 @@ class CrawlerBase(object):
             else:
                 result = COMMON_ERROR
         except requests.exceptions.ConnectionError:
-            Logger.error("base_crawler line 38 : user->{} "
-                         "ConnectionError".format(username))
+            Logger.error("user->{} ConnectionError".format(username))
         except requests.exceptions.URLRequired:
-            Logger.error("base_crawler line 41 : user->{} "
-                         "URLRequired".format(username))
+            Logger.error("user->{} URLRequired".format(username))
         except requests.exceptions.Timeout:
-            Logger.error("base_crawler line 44 : user->{} "
-                         "request TimeoutError".format(username))
+            Logger.error("user->{} request TimeoutError".format(username))
         except requests.exceptions.InvalidURL:
-            Logger.error("base_crawler line 47 : user->{} "\
-                         "request InvalidURL".format(username))
+            Logger.error("user->{} request InvalidURL".format(username))
         except Exception:
-            Logger.error("base_crawler line 50 : user->{} unknow error")
+            Logger.error("user->{} unknow error")
         finally:
             return result
 

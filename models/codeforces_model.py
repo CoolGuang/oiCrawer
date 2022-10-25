@@ -12,7 +12,8 @@ class CodeforcesUserInfoModel(UserProfileBase):
                  last_month_solutions=None,
                  last_contest_time=None,
                  latest_contests_ratings=None,
-                 last_contests_name=None
+                 last_contests_name=None,
+                 err_msg=None
                  ):
         self.username = username
         self.max_rating = max_rating
@@ -25,8 +26,11 @@ class CodeforcesUserInfoModel(UserProfileBase):
         self.latest_contests_ratings = latest_contests_ratings
         # 最近比赛（<10）的名称
         self.last_contests_name = last_contests_name
+        self.err_msg = err_msg
 
     def __repr__(self):
+        if self.err_msg:
+            return self.err_msg
         return "----(Codeforces个人信息)----" \
                "\n用户名: {}" \
                "\n最高Rating:{}" \
