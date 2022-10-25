@@ -70,7 +70,7 @@ class CodeforcesProfileCrawler(base_crawler.CrawlerBase):
                                              headers=self.headers, username=self.username)
         if not self.check_result(profile_body):
             return CFM.CodeforcesUserInfoModel(err_msg=profile_body)
-        contest_body = self.get_request_body(url=self.profile_url,
+        contest_body = self.get_request_body(url=self.contest_url,
                                              headers=self.headers, username=self.username)
         if not self.check_result(contest_body):
             return CFM.CodeforcesUserInfoModel(err_msg=contest_body)
