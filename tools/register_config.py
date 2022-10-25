@@ -12,7 +12,7 @@ class ConfigBase(object):
     def register(cls, config_name=None):
         def wrapper(func):
             if func.__name__ not in cls.NAME_CONFIG_DICT.keys():
-                with open("../config/{}.json".format(config_name)) as f:
+                with open("./config/{}.json".format(config_name)) as f:
                     crawler_config = json.load(f)
                 cls.NAME_CONFIG_DICT[config_name] = crawler_config
             return func

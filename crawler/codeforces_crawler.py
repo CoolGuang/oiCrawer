@@ -1,20 +1,12 @@
-import time
-
-from tools import base_crawler
-
-from tools import register_config
-from typing import  Union
-import models.codeforces_model as CFM
-from config.global_variable import *
+from .base_crawler import CrawlerBase
+from tools import register_config, Logger
+from models import CodeforcesContestModel, CodeforcesUserInfoModel
+from config import COMMON_ERROR
 
 from bs4 import BeautifulSoup
 
-from tools.diy_logger import Logger
 
-
-class CodeforcesProfileCrawler(base_crawler.CrawlerBase):
-
-
+class CodeforcesProfileCrawler(CrawlerBase):
 
     def __init__(self, username=None):
         self.username = username
@@ -64,16 +56,16 @@ class CodeforcesProfileCrawler(base_crawler.CrawlerBase):
         Logger.waring(solve_problems)
         return max_rating, current_rating, last_month_solutions, solve_problems
 
-    def _get_model(self) -> CFM.CodeforcesUserInfoModel:
+    def _get_model(self) -> CodeforcesUserInfoModel:
         # error judge
         profile_body = self.get_request_body(url=self.profile_url,
                                              headers=self.headers, username=self.username)
         if not self.check_result(profile_body):
-            return CFM.CodeforcesUserInfoModel(err_msg=profile_body)
+            return CodeforcesUserInfoModel(err_msg=profile_body)
         contest_body = self.get_request_body(url=self.contest_url,
                                              headers=self.headers, username=self.username)
         if not self.check_result(contest_body):
-            return CFM.CodeforcesUserInfoModel(err_msg=contest_body)
+            return CodeforcesUserInfoModel(err_msg=contest_body)
 
         if profile_body is None or contest_body is None:
             Logger.error("variable is None")
@@ -83,7 +75,7 @@ class CodeforcesProfileCrawler(base_crawler.CrawlerBase):
             self._deal_with_profile_body(body=profile_body)
         last_contests_name, latest_contests_ratings, last_contest_time = \
             self._deal_with_contest_body(body=contest_body)
-        result_model = CFM.CodeforcesUserInfoModel(
+        result_model = CodeforcesUserInfoModel(
             username=self.username,
             max_rating=max_rating,
             current_rating=current_rating,
@@ -109,7 +101,7 @@ class CodeforcesProfileCrawler(base_crawler.CrawlerBase):
         return self._result_model
 
 
-class CodeforcesContestCrawler(base_crawler.CrawlerBase):
+class CodeforcesContestCrawler(CrawlerBase):
 
     def __init__(self, username=None):
         self.username = username
@@ -147,15 +139,15 @@ class CodeforcesContestCrawler(base_crawler.CrawlerBase):
         return contest_name_list, contest_start_time_list\
             , contest_length_list, contest_url_list
 
-    def _get_model(self) -> CFM.CodeforcesContestModel:
+    def _get_model(self) -> CodeforcesContestModel:
         contest_body = self.get_request_body(url=self.profile_url, headers=self.headers)
         if not self.check_result(contest_body):
-            return CFM.CodeforcesContestModel(err_msg=contest_body)
+            return CodeforcesContestModel(err_msg=contest_body)
         if contest_body is None:
-            return CFM.CodeforcesContestModel(err_msg=COMMON_ERROR)
+            return CodeforcesContestModel(err_msg=COMMON_ERROR)
         contest_name_list, contest_start_time_list, contest_length_list, contest_url_list = \
             self.deal_with_contest_body(contest_body=contest_body)
-        res_model = CFM.CodeforcesContestModel(
+        res_model = CodeforcesContestModel(
             contest_name_list=contest_name_list,
             contest_start_time_list=contest_start_time_list,
             contest_length_list=contest_length_list,

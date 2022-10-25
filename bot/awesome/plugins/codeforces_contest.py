@@ -1,6 +1,6 @@
 from nonebot import on_command, CommandSession
 
-from tools import codeforces_crawler
+from crawler import codeforces_crawler
 
 """
  提供codeforces比赛信息查询

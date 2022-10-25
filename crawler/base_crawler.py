@@ -1,9 +1,7 @@
 
-import os
 import requests
-
-from config.global_variable import *
-from tools.diy_logger import Logger
+from config import USER_NOT_EXIST, URL_TIMEOUT, COMMON_ERROR, STATE_ERROR_LIST, SUCESSFUL_STATE
+from tools import Logger
 
 
 class CrawlerBase(object):

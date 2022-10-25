@@ -1,0 +1,2 @@
+from models.codeforces_model import CodeforcesContestModel
+from models.codeforces_model import CodeforcesUserInfoModel

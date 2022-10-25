@@ -1,4 +1,5 @@
-from models.model_base import UserProfileBase, ContestBase
+from .base_model import UserProfileBase, ContestBase
+
 import datetime
 
 
