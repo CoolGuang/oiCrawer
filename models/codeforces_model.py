@@ -134,7 +134,7 @@ class CodeforcesUserInfoModel(UserProfileBase):
 class CodeforcesContestModel(ContestBase):
 
     def __init__(self, contest_name_list=None, contest_start_time_list=None, contest_length_list=None, \
-                 contest_url_list=None):
+                 contest_url_list=None, err_msg=None):
         self.contest_name_list = contest_name_list
         self.contest_start_time_list = contest_start_time_list
         self.contest_length_list = contest_length_list
@@ -145,6 +145,7 @@ class CodeforcesContestModel(ContestBase):
                                                                      contest_length_list, contest_url_list)]
         except TypeError:
             self.contests_info = []
+        self.err_msg = err_msg
 
     @property
     def today_contests(self):
@@ -165,17 +166,22 @@ class CodeforcesContestModel(ContestBase):
         return contests
 
     def today_contests_string(self):
-        return self.get_contests_string(contest_list=self.today_contests)
+        if self.err_msg:
+            return self.err_msg
+        return self._get_contests_string(contest_list=self.today_contests)
 
     def recent_contest(self):
+        if self.err_msg:
+            return self.err_msg
         return self.contests_info
 
     def recent_contests_string(self):
-        return self.get_contests_string(contest_list=self.contests_info)
+        if self.err_msg:
+            return self.err_msg
+        return self._get_contests_string(contest_list=self.contests_info)
 
-    def get_contests_string(self, contest_list=None):
+    def _get_contests_string(self, contest_list=None):
         result = ""
-        #print(contest_list)
         if len(contest_list) == 0:
             result = "暂无任何比赛信息"
             return result

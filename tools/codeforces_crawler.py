@@ -113,22 +113,22 @@ class CodeforcesContestCrawler(base_crawler.CrawlerBase):
 
     def __init__(self, username=None):
         self.username = username
+        self.headers = None
+        self.profile_url = None
+        self._preLoad()
+        self._result_model = None
 
-    # @register_config.ConfigBase.register(config_name="codeforces_contest")
-    # def get_contest_info_body(self):
-    #     config = register_config.ConfigBase.NAME_CONFIG_DICT["get_contest_info_body"]
-    #     if not config:
-    #         Logger.error("codeforces_crawler.py line 97 : codeforces config error!")
-    #         return None
-    #     headers = config["headers"]
-    #     url = ""
-    #     for item in config["type_list"]:
-    #         if item["type_name"] == "latest_contest":
-    #             url = item["urls"]
-    #     contest_body_text = self.get_request_body(self, url=url[0], headers=headers)
-    #     return contest_body_text
+    @register_config.ConfigBase.register(config_name="codeforces_contest")
+    def _preLoad(self):
+        config = register_config.ConfigBase.NAME_CONFIG_DICT["codeforces_contest"]
+        if not config:
+            Logger.error("codeforces_crawler.py line 97 : codeforces config error!")
+            return None
+        self.headers = config["headers"]
+        self.profile_url = config["profile_url"]
 
-    def deal_with_contest_body(self, contest_body):
+    @staticmethod
+    def deal_with_contest_body(contest_body):
         contest_name_list = []
         contest_start_time_list = []
         contest_length_list = []
@@ -137,7 +137,6 @@ class CodeforcesContestCrawler(base_crawler.CrawlerBase):
         contest_list = soup.select_one("div.datatable>div>table")
         contest_list = contest_list.select("tr")
         for contest in contest_list[1:]:
-
             contest_url_list.append("https://codeforces.com/contest/{}"\
                                     .format(contest['data-contestid'].strip('\n\r ')))
             items = contest.select("td")
@@ -148,13 +147,12 @@ class CodeforcesContestCrawler(base_crawler.CrawlerBase):
         return contest_name_list, contest_start_time_list\
             , contest_length_list, contest_url_list
 
-    def get_contest_info_model(self):
-        contest_body = self.get_contest_info_body()
+    def _get_model(self) -> CFM.CodeforcesContestModel:
+        contest_body = self.get_request_body(url=self.profile_url, headers=self.headers)
         if not self.check_result(contest_body):
-            return contest_body
+            return CFM.CodeforcesContestModel(err_msg=contest_body)
         if contest_body is None:
-            Logger.error("variable is None")
-            return COMMON_ERROR
+            return CFM.CodeforcesContestModel(err_msg=COMMON_ERROR)
         contest_name_list, contest_start_time_list, contest_length_list, contest_url_list = \
             self.deal_with_contest_body(contest_body=contest_body)
         res_model = CFM.CodeforcesContestModel(
@@ -165,13 +163,18 @@ class CodeforcesContestCrawler(base_crawler.CrawlerBase):
         )
         return res_model
 
+    @property
+    def result_model(self):
+        if self._result_model is None:
+            self._result_model = self._get_model()
+        return self._result_model
+
 
 if __name__ == '__main__':
     # 测试
-    # crawler = CodeforcesContestCrawler()
-    # model = crawler.get_contest_info_model()
-    # print(model.today_contests_string())
-    # print(model.recent_contests_string())
+    crawler = CodeforcesContestCrawler()
+    model = crawler.result_model
+    print(model.today_contests_string())
     crawler_ = CodeforcesProfileCrawler(username="CCoolGuang")
     model = crawler_.result_info
     print(model)

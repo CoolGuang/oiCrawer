@@ -14,7 +14,7 @@ class CrawlerBase(object):
 
     @staticmethod
     def get_request_body(url=None, headers=None, username=None):
-        if url is not None:
+        if username is not None:
             url = url + username
         Logger.common("get url: {}".format(url))
         response = None
