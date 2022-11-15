@@ -1,5 +1,5 @@
 {
-  "url_name" : "codeforces",
+  "url_name" : "codeforces_profile",
   "headers" : {
     "Accept": "text/html",
     "Accept-Language": "en-US,en;q=0.8",
@@ -7,14 +7,6 @@
     "Connection": "keep-alive",
     "Referer": "http://www.baidu.com/"
   },
-  "type_list": [
-    {
-      "type_name": "latest_contest",
-      "urls" : ["https://codeforces.com/contests"]
-    },
-    {
-      "type_name": "user_profile",
-      "urls" : ["https://codeforces.com/profile/", "https://codeforces.com/contests/with/"]
-    }
-  ]
+  "profile_url" : "https://codeforces.com/profile/",
+  "contest_url" : "https://codeforces.com/contests/with/"
 }

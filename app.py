@@ -1,7 +1,8 @@
-
-from tools.diy_logger import Logger
+from crawler import CodeforcesContestCrawler, CodeforcesProfileCrawler
 
 if __name__ == '__main__':
-    print ("hello world")
-    a = 1
-    Logger.waring(type(a))
+
+    crawler_ = CodeforcesProfileCrawler(username="CCoolGuang")
+    model = crawler_.result_model
+    print(model)
+
